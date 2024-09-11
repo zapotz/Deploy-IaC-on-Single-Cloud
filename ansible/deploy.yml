@@ -1,0 +1,22 @@
+---
+#definimos un playbook llamado "Deploy Flask app"
+- name: Deploy Flask App
+  # este playbook se aplicara a todos los hosts definidos en el inventario
+  hosts: all
+  # became: yes significa que ansible usara elevaciones de privilegios (sudo) para estas tareas
+  become: yes
+
+#definir las tareas que ansible ejecutara
+  tasks:
+   #primera tarea: copiar el archivo de la aplicacion flask
+    - name: Copy Flask application
+    #Usamos el modulo copy de ansible
+      copy:
+        src: "{{ playbook_dir }}/../web-app/app.py"
+        dest: /home/ec2-user/app.py
+
+  #segunda tarea: iniciar la app flask
+    - name: Start Flask application
+   #usamos el modulo shell para ejecutar un comando en el servidor
+      shell: nohup python3 /home/ec2-user/app.py > /home/ec2-user/app.log 2>&1 &
+  #este comando inicia la aplicacion flask en segundo plano y redirige la salida a un archivo log
