@@ -2,3 +2,6 @@
 **/.terraform/*
 terraform-providers-backup/
 **/.terraform/*
+terraform/.terraform/
+*.tfstate
+*.tfstate.backup
