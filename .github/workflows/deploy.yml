@@ -37,6 +37,21 @@ jobs:
         run: |
           cd terraform
           terraform apply -auto-approve
+          
+      - name: Debug Terraform State
+        run: |
+            cd terraform
+            terraform show
+        shell: bash
+
+      - name: Debug Terraform Outputs
+        run: |
+          cd terraform
+          terraform output
+          terraform output -json
+        shell: bash
+
+      
 
       - name: Get EC2 IP
         run: |
