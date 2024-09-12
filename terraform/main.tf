@@ -60,6 +60,14 @@ resource "aws_security_group" "web" {
     name = "allow_web"
     description = "Allow web inbound traffic"
     vpc_id = aws_vpc.main.id
+    
+    ingress {
+        description = "SSH from anywhere"
+        from_port = 22 # <====== permitimos trafico HTTP entrante
+        to_port = 22
+        protocol = "tcp" #que aplique todos los protocolos
+        cidr_blocks = ["0.0.0.0/0"] #permitimos trafico desde cualquier direccion IP
+    }
 
     ingress {
         description = "HTTP from anywhere"
