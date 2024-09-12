@@ -75,6 +75,8 @@ jobs:
 
       - name: Deploy with Ansible
         run: |
+          echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/aws_terraform_key
+          chmod 600 ~/.ssh/aws_terraform_key
           echo "[webservers]" > ansible/inventory.ini
           echo "web ansible_host=${{ env.EC2_IP }} ansible_user=ec2-user ansible_ssh_private_key_file=~/.ssh/id_rsa" >> ansible/inventory.ini
           ansible-playbook -i ansible/inventory.ini ansible/playbook.yml

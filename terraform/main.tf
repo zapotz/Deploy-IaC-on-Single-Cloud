@@ -94,7 +94,8 @@ data "aws_ami" "amazon_linux_2" {
 #crear un nuevo key pair
 resource "aws_key_pair" "deployer" {
   key_name = "deployer-key"
-  public_key = file("${path.module}/deployer-key.pub")
+  public_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQCivIyDbt2iGiS/T4MnD8yvX24jsAkc0PB9x/Fr8S8X5G3tcm12ut8kY60p860FdIhd74f0XHU+Ao31nhp/jw96hRI51UDthIEjaS92YCSvEujkNr85KwS9R8zjztWMUGFLkj0LprszmZTKpauws9GccNRigAgAJlmxWphrD/bUBt7/2zTVUQitmBZRG5xMyDlDN6hGWCQkWt+kuLwlz44rfyxPll2dWfhwwc1x9AK6Atg5cf4iEwOXYgPG3ZVc9z5nElYJBrWELtItsJg6TIf7YwCBXLo3ou4yufscEjqycogLikEf7kv77CWxEq3lKzYnV1GoQzOGR558HRiMjuBnpB9peeYlNE2nQUTBc2blm8u7IFW2ChLwhjGaZ/VcExnSPOoxhwDgJjiXY643HzoIeVMS4vLIafiacy1zkbXmi2jL1e2yI/8a8IwYE3vDQmjnW6tqzicDv3+JHNHOri1nx1PC13VXNJU52AHLRb2sy0qlS7Z9WlX3koNzfGvKqDe+vzJdqwrP7Tu6JlXEVicmBYUEzrZ69hsOn+FMDlR/rTYCCsxFJmhc0VevDvp2SDwrZyMAIITRGGnUza49NA+Y0ze20hO1+DZ+ONozFiGIb2CR55gWMHoG1Rc6P/qmfHpWh5FmhzrboAo9eVOzXqu2XwYJOmZrZQkw7dIgVyZ0Nw== victorzptzu@gmail.com"
+
 }
 
 # crear una instancia EC2 (un servidor virtual) en AWS
