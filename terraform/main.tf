@@ -60,7 +60,7 @@ resource "aws_security_group" "web" {
     name = "allow_web"
     description = "Allow web inbound traffic"
     vpc_id = aws_vpc.main.id
-    
+
     ingress {
         description = "SSH from anywhere"
         from_port = 22 # <====== permitimos trafico HTTP entrante
@@ -73,6 +73,22 @@ resource "aws_security_group" "web" {
         description = "HTTP from anywhere"
         from_port = 80 # <====== permitimos trafico HTTP entrante
         to_port = 80
+        protocol = "tcp" #que aplique todos los protocolos
+        cidr_blocks = ["0.0.0.0/0"] #permitimos trafico desde cualquier direccion IP
+    }
+
+    ingress {
+        description = "HTTPS from anywhere"
+        from_port = 443 # <====== permitimos trafico HTTP entrante
+        to_port = 443
+        protocol = "tcp" #que aplique todos los protocolos
+        cidr_blocks = ["0.0.0.0/0"] #permitimos trafico desde cualquier direccion IP
+    }
+
+    ingress {
+        description = "Flask default port"
+        from_port = 5000 # <====== permitimos trafico HTTP entrante
+        to_port = 5000
         protocol = "tcp" #que aplique todos los protocolos
         cidr_blocks = ["0.0.0.0/0"] #permitimos trafico desde cualquier direccion IP
     }
