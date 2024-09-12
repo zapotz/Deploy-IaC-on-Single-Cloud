@@ -56,10 +56,18 @@ jobs:
       - name: Get EC2 IP
         run: |
           cd terraform
-          EC2_IP=$(terraform output -json public_ip | jq -r '.')
-          if [ -z "$EC2_IP" ]; then
-            echo "Failed to retrieve EC2 IP"
-            exit 1 
+          echo "Debug: Terraform version"
+          terraform version
+          echo "Debug: Terraform show"
+          terraform show
+          echo "Debug: Terraform output"
+          terraform output
+          echo "Debug: Attempting to get public_ip"
+          EC2_IP=$(terraform output -raw public_ip 2>&1) || true
+          echo "Debug: Raw output: $EC2_IP"
+          if [[ $EC2_IP == *"Error:"* ]] || [[ -z "$EC2_IP" ]]; then
+            echo "Failed to retrieve EC2 IP: $EC2_IP"
+            exit 1
           fi
           echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
           echo "Retrieved EC2 IP: $EC2_IP"
