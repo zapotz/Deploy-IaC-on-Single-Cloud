@@ -20,10 +20,29 @@
         src: "{{ playbook_dir }}/../web-app/app.py"
         dest: /home/ec2-user/app.py
 
-    - name: Start Flask application
-      shell: sudo nohup python3 /home/ec2-user/app.py > /home/ec2-user/app.log 2>&1 &
-      async: 1
-      poll: 0
+    - name: Create a systemd service file for Flask app
+      copy:
+        content: |
+          [Unit]
+          Description=Flask Web Application
+          After=network.target
+
+          [Service]
+          User=root
+          WorkingDirectory=/home/ec2-user
+          ExecStart=/usr/bin/python3 /home/ec2-user/app.py
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+        dest: /etc/systemd/system/flask_app.service
+
+    - name: Start and enable Flask service
+      systemd:
+        name: flask_app
+        state: started
+        enabled: yes
+        daemon_reload: yes
 
     - name: Ensure Flask app is running
       wait_for:
