@@ -109,9 +109,8 @@ resource "aws_instance" "web" {
 
   user_data = <<-EOF
               #!bin/bash
-              sudo yum update -y
-              sudo yum install -y python3 python3-pip
-              sudo pip3 install flask
+              echo "ec2-user ALL=(ALL) NOPASSWD:ALL" | sudo tee /etc/sudoers.d/ec2-user
+              sudo chmod 440 /etc/sudoers.d/ec2-user
               EOF
 
   tags = {

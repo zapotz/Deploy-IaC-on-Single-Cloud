@@ -1,0 +1,32 @@
+---
+- name: Deploy Flask App
+  hosts: all
+  become: yes
+  tasks:
+    - name: Ensure Python and pip are installed
+      yum:
+        name:
+          - python3
+          - python3-pip
+        state: present
+
+    - name: Install Flask
+      pip:
+        name: flask
+        executable: pip3
+
+    - name: Copy Flask application
+      copy:
+        src: "{{ playbook_dir }}/../web-app/app.py"
+        dest: /home/ec2-user/app.py
+
+    - name: Start Flask application
+      shell: sudo nohup python3 /home/ec2-user/app.py > /home/ec2-user/app.log 2>&1 &
+      async: 1
+      poll: 0
+
+    - name: Ensure Flask app is running
+      wait_for:
+        port: 80
+        delay: 5
+        timeout: 30
