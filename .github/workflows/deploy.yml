@@ -37,6 +37,7 @@ jobs:
         run: |
           cd terraform
           terraform apply -auto-approve
+        continue-on-error: true
           
       - name: Debug Terraform State
         run: |
@@ -56,15 +57,28 @@ jobs:
       - name: Get EC2 IP
         run: |
           cd terraform
-          EC2_IP=$(terraform output -raw public_ip | sed 's/::debug::.*$//')
+          echo "Debug: Current directory"
+          pwd
+          echo "Debug: Terraform state"
+          terraform show
+          echo "Debug: Terraform outputs"
+          terraform output
+          echo "Debug: Attempting to get public_ip"
+          RAW_OUTPUT=$(terraform output -raw public_ip || echo "FAILED")
+          echo "Debug: Raw output: $RAW_OUTPUT"
+          if [[ $RAW_OUTPUT == "FAILED" ]]; then
+            echo "Error: Failed to retrieve EC2 IP"
+            exit 1
+          fi
+          EC2_IP=$(echo $RAW_OUTPUT | sed 's/::debug::.*$//')
           if [ -z "$EC2_IP" ]; then
-            echo "Failed to retrieve EC2 IP"
+            echo "Error: Empty EC2 IP after processing"
             exit 1
           fi
           echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
           echo "Retrieved EC2 IP: $EC2_IP"
         shell: bash
-
+  
       - name: Deploy with Ansible
         run: |
           echo "${{ secrets.AWS_SSH_PRIVATE_KEY }}" > ~/.ssh/aws_terraform_key
