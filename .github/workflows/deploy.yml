@@ -44,8 +44,8 @@ jobs:
         run: |
           cd terraform
           RAW_OUTPUT=$(terraform output -raw public_ip)
-          EC2_IP=$(echo "$RAW_OUTPUT" | sed 's/::debug::.*$//')
-          echo "EC2_IP=$EC2_IP" >> $GITHUB_ENV
+          EC2_IP=$(echo "$RAW_OUTPUT" | tr -d '[:space:]')
+          echo "EC2_IP=$EC2_IP" >> "$GITHUB_ENV"
           echo "Retrieved EC2 IP: $EC2_IP"
         shell: bash
 
